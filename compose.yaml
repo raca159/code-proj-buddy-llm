@@ -1,0 +1,31 @@
+version: '3'
+services:
+  llm-backend:
+    build:
+      context: ./llm-backend
+    environment:
+      - server_host=0.0.0.0
+      - server_port=8001
+    ports:
+      - "8001:8001"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  streamlit-app:
+    build:
+      context: ./streamlit-app
+    environment:
+      - server_host=0.0.0.0
+      - server_port=8002
+    ports:
+      - "8002:8002"
+
+  qdrant-db:
+    image: qdrant/qdrant
+    ports:
+      - "8003:6333"
